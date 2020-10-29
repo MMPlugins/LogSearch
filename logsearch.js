@@ -1,12 +1,14 @@
 module.exports = function ({ knex, commands, logs, threads }) {
-    commands.addInboxThreadCommand("logsearch", [{ name: "toSearch", type: "string", "required": true, "catchAll": true}], async (msg, args, thread) => {
+    const actualLogsearchCommand = async (msg, args, thread) => {
+        const userIdToSearch = args.userId || (thread && thread.user_id);
+        if(! userIdToSearch) return;
         const toSearch = args["toSearch"];
 
         const matchingMessages = await knex
             .distinct("*")
             .from("thread_messages")
             .innerJoin("threads", "threads.id", "thread_messages.thread_id")
-            .where("threads.user_id", thread.user_id)
+            .where("threads.user_id", userIdToSearch)
             .where("body", "like", `%${toSearch}%`)
             .whereNot("message_type", 1)
             .whereNot("message_type", 6)
@@ -22,6 +24,21 @@ module.exports = function ({ knex, commands, logs, threads }) {
             formatted += `\n${await logs.getLogUrl(urlThread)}`;
         }
 
-        thread.postSystemMessage(`The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`);
-    });
+        if (thread) {
+            if (matchingMessages.length === 0) {
+                thread.postSystemMessage(`No logs from this user contain the text \`${toSearch}\``);
+            } else {
+                thread.postSystemMessage(`The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`);
+            }
+        } else {
+            if(matchingMessages.length === 0) {
+                msg.channel.createMessage(`No logs from this user contain the text \`${toSearch}\``);
+            } else {
+                msg.channel.createMessage(`The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`);
+            }
+        }
+    };
+
+    commands.addInboxServerCommand("logsearch", [{ name: "userId", type: "userId", required: true}, { name: "toSearch", type: "string", "required": true, "catchAll": true }], actualLogsearchCommand);
+    commands.addInboxThreadCommand("logsearch", [{ name: "toSearch", type: "string", "required": true, "catchAll": true }], actualLogsearchCommand);
 }

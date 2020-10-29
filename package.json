@@ -1,6 +1,6 @@
 {
   "name": "logsearch",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A plugin for Discord ModMail by Dragory that allows searching through logs of a specific user",
   "main": "./logsearch.js",
   "scripts": {
