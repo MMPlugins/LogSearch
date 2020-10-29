@@ -1,0 +1,25 @@
+{
+  "name": "logsearch",
+  "version": "1.0.0",
+  "description": "A plugin for Discord ModMail by Dragory that allows searching through logs of a specific user",
+  "main": "./logsearch.js",
+  "scripts": {
+    "lint": "eslint --fix ./logsearch.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarkView/LogSearch.git"
+  },
+  "keywords": [
+    "modmail",
+    "plugin"
+  ],
+  "author": "DarkView",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/DarkView/LogSearch/issues"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.1"
+  }
+}
