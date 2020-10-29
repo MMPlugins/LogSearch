@@ -8,7 +8,15 @@ plugins[] = npm:MMPlugins/LogSearch
 ```
 Restart your bot!
 
-### Usage
+## Usage
+Any system messages and commands are not taken into account when searching and are ignored.
 
-Use `[prefix]logsearch things to search...` (by default, your prefix is !) in any thread to search through the given users logs.
-The bot will send a list with all logs from the user that contain what you searched for.
+#### In A Thread
+Signature: `logsearch <search query>`
+This will return a list of all logs that contain what you searched for.
+The search will be executed for the current threads user.
+
+#### In The Inbox Server
+Signature: `logsearch <userId> <search query>`
+This will return a list of all logs that contain what you searched for.
+The search will be executed for the userId you pass to the command.
