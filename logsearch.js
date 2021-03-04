@@ -1,10 +1,24 @@
 module.exports = function ({ knex, commands, logs, threads }) {
     const actualLogsearchCommand = async (msg, args, thread) => {
         const userIdToSearch = args.userId || (thread && thread.user_id);
-        if(! userIdToSearch) return;
+        let globalSearch = false;
+        if (userIdToSearch === "global") {
+            globalSearch = true;
+        }
         const toSearch = args["toSearch"];
 
-        const matchingMessages = await knex
+        let matchingMessages;
+        if (globalSearch) {
+            matchingMessages = await knex
+            .distinct("*")
+            .from("thread_messages")
+            .innerJoin("threads", "threads.id", "thread_messages.thread_id")
+            .where("body", "like", `%${toSearch}%`)
+            .whereNot("message_type", 1)
+            .whereNot("message_type", 6)
+            .whereNot("message_type", 7);
+        } else {
+            matchingMessages = await knex
             .distinct("*")
             .from("thread_messages")
             .innerJoin("threads", "threads.id", "thread_messages.thread_id")
@@ -13,6 +27,7 @@ module.exports = function ({ knex, commands, logs, threads }) {
             .whereNot("message_type", 1)
             .whereNot("message_type", 6)
             .whereNot("message_type", 7);
+        } 
 
         let formatted = "";
         const handledUrls = [];
@@ -39,6 +54,6 @@ module.exports = function ({ knex, commands, logs, threads }) {
         }
     };
 
-    commands.addInboxServerCommand("logsearch", [{ name: "userId", type: "userId", required: true}, { name: "toSearch", type: "string", "required": true, "catchAll": true }], actualLogsearchCommand);
+    commands.addInboxServerCommand("logsearch", [{ name: "userId", type: "string", required: true}, { name: "toSearch", type: "string", "required": true, "catchAll": true }], actualLogsearchCommand);
     commands.addInboxThreadCommand("logsearch", [{ name: "toSearch", type: "string", "required": true, "catchAll": true }], actualLogsearchCommand);
 }
