@@ -41,15 +41,15 @@ module.exports = function ({ knex, commands, logs, threads }) {
 
         if (thread) {
             if (matchingMessages.length === 0) {
-                thread.postSystemMessage(`No logs from this user contain the text \`${toSearch}\``);
+                msg.channel.createMessage({ content: `No logs contain the text \`${toSearch}\``, messageReferenceID: msg.id });
             } else {
-                thread.postSystemMessage(`The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`);
+                msg.channel.createMessage({ content: `The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`, messageReferenceID: msg.id});
             }
         } else {
             if(matchingMessages.length === 0) {
-                msg.channel.createMessage(`No logs from this user contain the text \`${toSearch}\``);
+                msg.channel.createMessage({ content: `No logs contain the text \`${toSearch}\``, messageReferenceID: msg.id });
             } else {
-                msg.channel.createMessage(`The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`);
+                msg.channel.createMessage({ content: `The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`, messageReferenceID: msg.id});
             }
         }
     };
