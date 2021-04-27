@@ -6,7 +6,7 @@ If the command is run in a thread, the user it is with will always be taken as t
 Please read [the documentation below](#usage) to learn how the commands work!  
 
 ### Setup:
-Make sure your running at least v3.3.0 of Modmail.
+Make sure your running at least v3.3.2 of Modmail.
 in your config.ini file, make a new line and add:  
 ```ini
 plugins[] = npm:MMPlugins/LogSearch
