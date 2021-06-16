@@ -36,20 +36,17 @@ module.exports = function ({ knex, commands, logs, threads }) {
             handledUrls.push(matchingThread.thread_id);
 
             const urlThread = await threads.findById(matchingThread.thread_id);
-            formatted += `\n${await logs.getLogUrl(urlThread)}`;
+            formatted += `${await logs.getLogUrl(urlThread)}\n`;
         }
 
-        if (thread) {
-            if (matchingMessages.length === 0) {
-                msg.channel.createMessage({ content: `No logs contain the text \`${toSearch}\``, messageReferenceID: msg.id });
-            } else {
-                msg.channel.createMessage({ content: `The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`, messageReferenceID: msg.id});
-            }
+        if (matchingMessages.length === 0) {
+            msg.channel.createMessage({ content: `No logs contain the text \`${toSearch}\``, messageReferenceID: msg.id });
         } else {
-            if(matchingMessages.length === 0) {
-                msg.channel.createMessage({ content: `No logs contain the text \`${toSearch}\``, messageReferenceID: msg.id });
-            } else {
-                msg.channel.createMessage({ content: `The following ${handledUrls.length} logs contain the text \`${toSearch}\`:${formatted}`, messageReferenceID: msg.id});
+            let toSend = `The following ${handledUrls.length} logs contain the text \`${toSearch}\`:\n${formatted}`;
+            toSend = toSend.match(/(.|[\r\n]){1,1900}[\n$]/g);
+
+            for (const chunk of toSend) {
+                msg.channel.createMessage({ content: chunk });
             }
         }
     };
