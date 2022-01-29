@@ -5,6 +5,9 @@ This plugin allows everyone with permission to use the MM bot to search through 
 If the command is run in a thread, the user it is with will always be taken as the search target.  
 Please read [the documentation below](#usage) to learn how the commands work!  
 
+## Attention
+This plugin only works if your logStorage is set to local as the plugin only relays the log links, NOT log files.
+
 ### Setup:
 Make sure your running at least v3.3.2 of Modmail.
 in your config.ini file, make a new line and add:  
